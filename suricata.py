@@ -6,7 +6,7 @@ logpath = sys.argv[2] # 'e.g., /home/public'
 
 for files in os.listdir(dirpath):
     # ---run snort---
-    abspath = f'{dirpath}/{files}'
+    abspath = f'{dirpath}\{files}'
     command = ['C:\Program Files\Suricata\suricata.exe', '-c', 'C:\Program Files\Suricata\suricata.yaml', '-l', logpath, '-r', abspath]
     subprocess.run(command)
     
