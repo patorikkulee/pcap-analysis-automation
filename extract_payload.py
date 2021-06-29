@@ -5,7 +5,7 @@ import pandas
 protocol = str(input('protocol:'))
 dirpath = '/home/patrick/Downloads/' + protocol
 files = [f for f in listdir(dirpath) if isfile(join(dirpath, f)) and '.txt' in f and 'metadata' not in f] # get all files in a directory
-df = pandas.DataFrame(columns=['Attack pattern ID', 'subcluster ID', 'isp', 'payload']) # create a new dfto store
+df = pandas.DataFrame(columns=['Attack pattern ID', 'subcluster ID', 'isp', 'text', 'binary']) # create a new df to store parsed data
 
 clusterSeparator = '==============================\n'
 payloadSeparator = '----------------------------\n'
@@ -41,9 +41,11 @@ def main(filename):
         for session in sub:
             if 'Attacker to Honeypot\n' in session:
                 position = session.index('Attacker to Honeypot\n')
-                payload = ''.join(session[position+1:]).lstrip('\n').rstrip('\n')
-                
-                row = {'Attack pattern ID': attackpatternid,'subcluster ID': subclusterid, 'isp': isp, 'payload': payload}
+                payload = ''.join(session[position+1:]).lstrip('\n').rstrip('\n').rsplit('\n',1)
+                binary = payload[-1]
+                text = (None if len(payload)==1 else payload[0])
+
+                row = {'Attack pattern ID': attackpatternid,'subcluster ID': subclusterid, 'isp': isp, 'text': text, 'binary': binary}
                 df = df.append(row, ignore_index=True)
 
 if __name__=='__main__':
